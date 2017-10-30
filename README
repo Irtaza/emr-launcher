@@ -1,0 +1,33 @@
+# EMR Launcher
+This is a service that will be trigger an ETL job after a manifest file lands in a specified bucket. The service takes the information about the ETL to run from the manifest file and then executes the ETL (pyspark) code in EMR. At the moment only PysPark and EMR are supported by the ETL launcher
+
+### Sample Manifest File
+A sample manifest file that can be used with the Lambda function is below:
+
+```json
+{
+    "etl":{
+	"script": "dcm_api_report_0.0.1.py",
+	"type": "pyspark",
+	"script_s3_bucket" : "fusion-etl-nonprod",
+	"script_s3_key": "dcm_api_report_0.0.1.py"
+	}
+    ,
+    "resource":{
+	"instance_type": "m1.large",
+	"instance_count": "1",
+	"use_existing_cluster":  "True",
+	"terminate_cluster": "True"
+    }
+    ,
+    "placeholder": {
+         "__output_path__": "s3://test-upload-athena/parquet/DFAReport_09-02-2017",
+	 "__calendar_type_id__": "4",
+  	 "__timezone__": "America/Los_Angeles"
+              }
+    ,
+    "source": {
+    	"__input_path__": "s3://test-upload-athena/csv/DFAReport_09-02-2017.csv"
+              }
+  }
+```
